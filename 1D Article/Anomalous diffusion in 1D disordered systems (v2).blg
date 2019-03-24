@@ -1,0 +1,50 @@
+This is BibTeX, Version 0.99d (TeX Live 2019/dev/Debian)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: Anomalous diffusion in 1D disordered systems (v2).aux
+The style file: unsrt.bst
+Database file #1: Anderson_Bib.bib
+Warning--empty journal in osti_4074688
+Warning--there's a number but no volume in valdinoci2009long
+Warning--can't use both volume and number fields in anisimov2010electronic
+You've used 61 entries,
+            1791 wiz_defined-function locations,
+            826 strings with 13799 characters,
+and the built_in function-call counts, 14410 in all, are:
+= -- 1259
+> -- 655
+< -- 13
++ -- 243
+- -- 182
+* -- 1072
+:= -- 2304
+add.period$ -- 190
+call.type$ -- 61
+change.case$ -- 52
+chr.to.int$ -- 0
+cite$ -- 64
+duplicate$ -- 626
+empty$ -- 1410
+format.name$ -- 182
+if$ -- 3189
+int.to.chr$ -- 0
+int.to.str$ -- 61
+missing$ -- 70
+newline$ -- 309
+num.names$ -- 63
+pop$ -- 146
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 259
+stack$ -- 0
+substring$ -- 989
+swap$ -- 119
+text.length$ -- 13
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 3
+while$ -- 137
+width$ -- 63
+write$ -- 675
+(There were 3 warnings)

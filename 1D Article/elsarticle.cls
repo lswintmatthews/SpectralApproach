@@ -74,7 +74,7 @@
   \let\iiiint\relax
   \let\idotsint\relax
   \let\openbox\relax}}{\RequirePackage{times}}}
-\ExecuteOptions{a4paper,10pt,oneside,onecolumn,number,preprint}
+\ExecuteOptions{a4paper,12pt,oneside,onecolumn,number,preprint}
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions
 \LoadClass{article}
@@ -447,7 +447,7 @@
      \let\@oddhead\@empty
      \let\@evenhead\@empty
      \def\@oddfoot{\footnotesize\itshape
-       Preprint submitted to \ifx\@journal\@empty Elsevier
+       \ifx\@journal\@empty
        \else\@journal\fi\hfill\today}%
      \let\@evenfoot\@oddfoot}
 \def\@seccntDot{.}

@@ -61,7 +61,7 @@ Z = zeros(n-2,max,trials); % Empty vector for storing individual results
 %% The following "parfor" loop while parallelize the process of
 %% running multiple trials
 
-parfor iii = 1:trials
+for iii = 1:trials
     
     %% Initialize relevant vector and values
     
@@ -69,6 +69,9 @@ parfor iii = 1:trials
     Y = zeros(n-2,max);  % Solution vector for given trial
     Omega = c.*(rand(N,1)-0.5*ones(N,1)); % Vector of random values
     NN = 0.5*(N-1)+1; % Midpoint of lattice (for starting point)
+    Ns = 2*n+1;
+    NNs = 0.5*(Ns-1)+1;
+    OOmega = Omega(NN-n:NN+n,1);
     
     %% The following loops runs computations for each s-value
     
@@ -76,7 +79,7 @@ parfor iii = 1:trials
     
         s = ss(ll); % Extracts s-value from appropriate position
     
-        if s ~= 1 % Checks s-value
+        if s < 0.95 || s > 1.05 % Checks s-value
     
             A = zeros(N,3); % Placeholder vector for the simulation
             A(NN,1) = 1; % Builds delta_0
@@ -139,7 +142,7 @@ parfor iii = 1:trials
                 
                 % The following two lines perform Gram-Schmidt
         
-                A(:,3) = A(:,3) - ((A(:,3))'*A(:,2)).*A(:,2) - ((A(:,3))'*A(:,1)).*A(:,1);
+                A(:,3) = A(:,3) - ((A(:,3))'*A(:,1)).*A(:,1) - ((A(:,3))'*A(:,2)).*A(:,2);
                 A(:,3) = A(:,3)./norm(A(:,3));
                 
                 % The next set of code computes the distance value based
@@ -201,33 +204,36 @@ parfor iii = 1:trials
                 
             end
     
-        end
+        %end
         
         % Due to the sensitivity of this code, we will approximate the s=1
         % case via a simple averaging
         
-        if s == 1
+        else
             
             p = 0;
             
+            A = zeros(Ns,3); % Placeholder vector for the simulation
+            A(NNs,1) = 1; % Builds delta_0
+            
            %% Generation of second vector under Laplacian
-            A(NN-1,2) = -1/sqrt(2);
-            A(NN+1,2) = -1/sqrt(2);
+            A(NNs-1,2) = -1/sqrt(2);
+            A(NNs+1,2) = -1/sqrt(2);
             
            %% The following loop computes the remaining iterations under the 
            %% action of the random Schrodinger operator (standard Laplacian)
     
             for i = 2:(n-1)
-                for k = NN-i:NN+i
+                for k = NNs-i:NNs+i
                     A(k,3) = -A(k-1,2) + 2*A(k,2) - A(k+1,2); %Laplacian action
                 end
     
-                A(:,3) = A(:,3) + A(:,2).*Omega; %Addition of random component
+                A(:,3) = A(:,3) + A(:,2).*OOmega; %Addition of random component
     
                %% The following performs the orthogonalization procedure and 
                %% normalizes the resulting vector
         
-                A(:,3) = A(:,3) - ((A(:,3))'*A(:,2)).*A(:,2) - ((A(:,3))'*A(:,1)).*A(:,1);
+                A(:,3) = A(:,3) - ((A(:,3))'*A(:,1)).*A(:,1) - ((A(:,3))'*A(:,2)).*A(:,2);
                 A(:,3) = A(:,3)./norm(A(:,3));
                 
                 % The next set of code computes the distance value based
@@ -235,17 +241,17 @@ parfor iii = 1:trials
                 
                 if P == 1
                     
-                    p = p + (A(NN-1,3))^2;
+                    p = p + (A(NNs-1,3))^2;
                     
                 elseif P == 2
                     
-                    p = p + 0.25*((A(NN-1,3)-A(NN+1,3)+A(NN-2,3)-A(NN+2,3))^2);
+                    p = p + 0.25*((A(NNs-1,3)-A(NNs+1,3)+A(NNs-2,3)-A(NNs+2,3))^2);
                     
                 elseif P == 3
                     
                     pp = 0;
                         for ii = 1:influence-1
-                            pp = pp + ((-1)^(ii-1))*(A(NN-ii,3)) + ((-1)^(ii))*(A(NN+ii,3));
+                            pp = pp + ((-1)^(ii-1))*(A(NNs-ii,3)) + ((-1)^(ii))*(A(NNs+ii,3));
                         end
                     p = p + 0.5*(1/((influence-1)))*(pp^2);
                     
@@ -253,7 +259,7 @@ parfor iii = 1:trials
                     
                     pp = 0;
                     for ii = 1:10
-                        pp = pp + ((-1)^(ii-1))*(A(NN-ii,3)) + ((-1)^(ii))*(A(NN+ii,3));
+                        pp = pp + ((-1)^(ii-1))*(A(NNs-ii,3)) + ((-1)^(ii))*(A(NNs+ii,3));
                     end
                     p = p + 0.5*(1/10)*(pp^2);
                     
@@ -261,7 +267,7 @@ parfor iii = 1:trials
                     
                     pp = 0;
                     for ii = 1:50
-                        pp = pp + ((-1)^(ii-1))*(A(NN-ii,3)) + ((-1)^(ii))*(A(NN+ii,3));
+                        pp = pp + ((-1)^(ii-1))*(A(NNs-ii,3)) + ((-1)^(ii))*(A(NNs+ii,3));
                     end
                     p = p + 0.5*(1/50)*(pp^2);
                     
@@ -269,7 +275,7 @@ parfor iii = 1:trials
                     
                     pp = 0;
                     for ii = 1:100
-                        pp = pp + ((-1)^(ii-1))*(A(NN-ii,3)) + ((-1)^(ii))*(A(NN+ii,3));
+                        pp = pp + ((-1)^(ii-1))*(A(NNs-ii,3)) + ((-1)^(ii))*(A(NNs+ii,3));
                     end
                     p = p + 0.5*(1/100)*(pp^2);
                     
@@ -339,7 +345,7 @@ end
 %% Saving Data
 
 FolderDestination = ['Fractional_Anderson_Data_s_' num2str(s(1)) '-' num2str(s(max)) '_c_' cString];
-data = ['Frac_Data_s_' num2str(s(1)) '-' num2str(s(max)) '_c_' cString '_n_' num2str(n) '_infl_' num2str(influence) '_trials_' num2str(trials) '_' datestr(datetime('now')) '.mat'];
+data = ['new_Desktop_run_' 'Frac_Data_s_' num2str(s(1)) '-' num2str(s(max)) '_c_' cString '_n_' num2str(n) '_infl_' num2str(influence) '_trials_' num2str(trials) '_' datestr(datetime('now')) '.mat'];
 matfile = fullfile(ddir,FolderDestination,data);
 
 save(matfile);
